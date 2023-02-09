@@ -26,7 +26,8 @@
           });
           if (result === -1) {
             const add = this.list.push({ name, text, status });
-            localStorage.setItem(this.name, JSON.stringify(this.list));
+            this.local();
+            this.localGet();
           }
         }
 
@@ -35,14 +36,16 @@
             this.list.find((element) => {
               if (element.name === name) return (element.name = updateValue);
             });
-            localStorage.setItem(this.name, JSON.stringify(this.list));
+            this.local();
+            this.localGet();
           }
         }
 
         removeList({ name }, index) {
           if (this.confirmList()) {
             this.list = this.list.filter((note) => note.name !== name);
-            localStorage.setItem(this.name, JSON.stringify(this.list));
+            this.local();
+            this.localGet();
           }
           return;
         }
@@ -54,10 +57,21 @@
         toggle({ name }) {
           this.list.forEach((note) => {
             if (note.name === name) note.status = !note.status;
-            localStorage.setItem(this.name, JSON.stringify(this.list));
+            this.local();
+            this.localGet();
           });
         }
-
+        
+           local() {
+          const data = localStorage.setItem(
+            this.name,
+            JSON.stringify(this.list)
+          );
+        }
+            localGet(){
+          this.list = JSON.parse(localStorage.getItem(this.name));
+        }
+         
         getSummery() {
           return this.list.reduce((info, note) => {
             if (!info.total) {
